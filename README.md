@@ -8,11 +8,16 @@ Download to your local machine and install dependencies using a virtualenv.
 Inside your local clone of 4get execute these commands:
 
 ```shell
+# Create virtual environment
 python -m venv .venv
+
 # Linux/MacOS
 source .venv/bin/activate
 # Windows/Powershell
 .\.venv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
 Then you can make `main.py` executable if you dont want to type `python` everytime:
