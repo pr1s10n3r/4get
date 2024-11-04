@@ -100,9 +100,11 @@ if __name__ == "__main__":
         logging.error(f"Could not get thread: {e}")
         sys.exit(1)
 
-    ignored_formats = [
-        fmt.strip().replace(".", "") for fmt in args.ignore_formats.strip().split(",")
-    ]
+    ignored_formats = []
+    if args.ignore_formats:
+        ignored_formats = [
+            fmt.strip().replace(".", "") for fmt in args.ignore_formats.strip().split(",")
+        ]
 
     posts = [
         p
