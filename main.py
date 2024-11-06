@@ -77,6 +77,10 @@ if __name__ == "__main__":
         level=logging.DEBUG if args.verbose else logging.INFO,
     )
 
+    # Disable requests debug logging
+    logging.getLogger("requests").setLevel(logging.WARNING)
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
+
     if args.version:
         print(f"4get v{VERSION}")
         sys.exit(0)
