@@ -94,7 +94,7 @@ if __name__ == "__main__":
         board = expmatch.group(1)
         thread_id = expmatch.group(2)
     else:
-        logging.fatal("Could not extract board and thread if from provided URL")
+        logging.fatal("Could not extract board and thread id from provided URL")
         sys.exit(1)
 
     thread = None
