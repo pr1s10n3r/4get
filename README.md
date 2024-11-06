@@ -51,19 +51,19 @@ options:
 1. Download a thread without certain media types.
 
 ```shell
-python main.py --ignore-formats "webm,gif,png" -t https://boards.4chan.org/\<board\>/thread/\<thread id\>
+python main.py --ignore-formats "webm,gif,png" -t https://boards.4chan.org/<board>/thread/<thread id>
 ```
 
 2. Download media into especific output directory.
 
 ```shell
-python main.py -o /path/to/directory -t https://boards.4chan.org/\<board\>/thread/\<thread id\>
+python main.py -o /path/to/directory -t https://boards.4chan.org/<board>/thread/<thread id>
 ```
 
 3. Keep original filename instead of 4chan timestamp.
 
 ```shell
-python main.py --keep-filename /path/to/directory -t https://boards.4chan.org/\<board\>/thread/\<thread id\>
+python main.py --keep-filename /path/to/directory -t https://boards.4chan.org/<board>/thread/<thread id>
 ```
 
 ## License
