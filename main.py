@@ -48,6 +48,21 @@ if __name__ == "__main__":
     )
 
     parser.add_argument("-t", "--thread", help="4chan thread url")
+    parser.add_argument(
+        "-w",
+        "--workers",
+        type=int,
+        dest="workers",
+        help="maximum number of threads that can be used to download posts, If not specified, all available threads on the CPU will be used",
+        default=None,
+    )
+    parser.add_argument(
+        "-s",
+        "--sleep",
+        type=int,
+        help="seconds to wait for a thread before starting to download the next post",
+        default=0,
+    )
     parser.add_argument("--version", action="store_true", help="print version and exit")
     parser.add_argument(
         "-o", "--output", dest="output", default=".", help="output directory path"
@@ -107,7 +122,8 @@ if __name__ == "__main__":
     ignored_formats = []
     if args.ignore_formats:
         ignored_formats = [
-            fmt.strip().replace(".", "") for fmt in args.ignore_formats.strip().split(",")
+            fmt.strip().replace(".", "")
+            for fmt in args.ignore_formats.strip().split(",")
         ]
 
     posts = [
@@ -120,7 +136,11 @@ if __name__ == "__main__":
         logging.error("Thread does not have posts or no post match your criteria")
         sys.exit(1)
 
-    with concurrent.futures.ThreadPoolExecutor() as executor:
+    if args.workers < 1:
+        logging.error("Workers parameters has to be greater than 0")
+        sys.exit(1)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
         futures = {
             executor.submit(
                 save_thread_post, board, post, args.output, args.keep_filename
