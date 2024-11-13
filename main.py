@@ -7,6 +7,7 @@ import logging
 import os
 import re
 import sys
+import time
 
 import requests
 
@@ -20,7 +21,9 @@ def get_board_thread(board: str, id: int) -> dict:
     return resp.json()
 
 
-def save_thread_post(board: str, post: dict, output: str, keep_filename=False) -> None:
+def save_thread_post(
+    board: str, post: dict, output: str, keep_filename=False, **kwargs
+) -> None:
     post_tim = str(post.get("tim"))
     post_ext = post.get("ext")
 
@@ -30,6 +33,11 @@ def save_thread_post(board: str, post: dict, output: str, keep_filename=False) -
         else os.path.join(output, post_tim + post_ext)
     )
     logging.debug(f"Downloading {post_tim + post_ext} into {local_output_path}")
+
+    sleep = kwargs.get("sleep", 0.0)
+    if sleep > 0.0:
+        logging.debug(f"Sleeping for {sleep} seconds")
+        time.sleep(sleep)
 
     resp = requests.get(f"https://i.4cdn.org/{board}/{post_tim}{post_ext}")
     if resp.status_code != 200:
@@ -42,7 +50,6 @@ def save_thread_post(board: str, post: dict, output: str, keep_filename=False) -
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(
         prog="4get", description="4chan thread media downloader"
     )
@@ -136,14 +143,19 @@ if __name__ == "__main__":
         logging.error("Thread does not have posts or no post match your criteria")
         sys.exit(1)
 
-    if args.workers < 1:
+    if args.workers and args.workers < 1:
         logging.error("Workers parameters has to be greater than 0")
         sys.exit(1)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.workers) as executor:
         futures = {
             executor.submit(
-                save_thread_post, board, post, args.output, args.keep_filename
+                save_thread_post,
+                board,
+                post,
+                args.output,
+                args.keep_filename,
+                sleep=args.sleep,
             ): post
             for post in posts
         }
